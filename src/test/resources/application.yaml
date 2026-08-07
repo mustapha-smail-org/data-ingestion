@@ -7,18 +7,18 @@ log:
       app: INFO
 app:
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-    username: ${KAFKA_USERNAME}
-    password: ${KAFKA_PASSWORD}
-    sasl-mechanism: ${KAFKA_SASL_MECHANISM:SCRAM-SHA-256}
+    bootstrap-servers: KAFKA_BOOTSTRAP_SERVERS
+    username: KAFKA_USERNAME
+    password: KAFKA_PASSWORD
+    sasl-mechanism: SCRAM-SHA-256
 
     topic:
-      events: ${KAFKA_EVENTS_TOPIC}
+      events: KAFKA_EVENTS_TOPIC
 
     schema-registry:
-      url: ${SCHEMA_REGISTRY_URL}
-      username: ${SCHEMA_REGISTRY_USERNAME}
-      password: ${SCHEMA_REGISTRY_PASSWORD}
+      url: SCHEMA_REGISTRY_URL
+      username: SCHEMA_REGISTRY_USERNAME
+      password: SCHEMA_REGISTRY_PASSWORD
       auto-register-schemas: false
 api:
   opendata:
