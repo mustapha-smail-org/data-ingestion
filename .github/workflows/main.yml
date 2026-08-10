@@ -10,7 +10,7 @@ jobs:
     with:
       service-name: data-ingestion
       java-version: '21'
-      sonar-project-key: data-ingestion
+      sonar-project-key: mustapha-smail-org_data-ingestion
       sonar-project-name: 'CityPulse Data Ingestion'
       sonar-organization: mustapha-smail-org
       jacoco-threshold: '70'
