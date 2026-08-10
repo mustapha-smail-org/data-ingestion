@@ -1,0 +1,16 @@
+name: PR
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    uses: mustapha-smail-org/deployment-workflows/.github/workflows/ci-pr.yml@main
+    with:
+      java-version: '21'
+      sonar-project-key: data-ingestion
+      sonar-project-name: 'CityPulse Data Ingestion'
+      jacoco-threshold: '70'
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
