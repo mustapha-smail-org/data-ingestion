@@ -3,7 +3,7 @@ spring:
     name: data-ingestion
 log:
     level:
-      root: INFO
+      root: WARN
       app: INFO
 app:
   kafka:

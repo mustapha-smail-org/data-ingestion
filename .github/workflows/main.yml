@@ -1,0 +1,20 @@
+name: Main
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    uses: mustapha-smail-org/deployment-workflows/.github/workflows/ci-main.yml@main
+    with:
+      service-name: data-ingestion
+      java-version: '21'
+      sonar-project-key: mustapha-smail-org_data-ingestion
+      sonar-project-name: 'CityPulse Data Ingestion'
+      sonar-organization: mustapha-smail-org
+      jacoco-threshold: '70'
+      automation-app-id: ${{ secrets.AUTOMATION_APP_ID }}
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
+      automation-app-private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
