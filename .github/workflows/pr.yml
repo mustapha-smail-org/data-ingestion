@@ -6,6 +6,8 @@ on:
 
 jobs:
   ci:
+    permissions:
+      contents: read
     uses: mustapha-smail-org/deployment-workflows/.github/workflows/ci-pr.yml@main
     with:
       java-version: '21'
