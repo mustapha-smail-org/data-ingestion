@@ -10,6 +10,6 @@ jobs:
     uses: mustapha-smail-org/deployment-workflows/.github/workflows/ci-release.yml@main
     with:
       service-name: data-ingestion
-      automation-app-id: ${{ secrets.AUTOMATION_APP_ID }}
+      automation-app-id: ${{ vars.AUTOMATION_APP_ID }}
     secrets:
       automation-app-private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
