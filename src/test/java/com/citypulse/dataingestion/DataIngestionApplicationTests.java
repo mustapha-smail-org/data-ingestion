@@ -6,7 +6,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1,
-        topics = {"${app.kafka.topic.events}"})
+        topics = {"${app.kafka.topic.events:KAFKA_EVENTS_TOPIC}"})
 class DataIngestionApplicationTests {
 
     @Test
