@@ -6,6 +6,10 @@ on:
 
 jobs:
   ci:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     uses: mustapha-smail-org/deployment-workflows/.github/workflows/ci-main.yml@main
     with:
       service-name: data-ingestion
