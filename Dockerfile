@@ -18,5 +18,8 @@ LABEL org.opencontainers.image.title="data-ingestion" \
 
 COPY --from=builder /app/target/data-ingestion-*.jar app.jar
 
+# Optional externalized config, mounted by the deployment phase. If not mounted, the application will use the default config in the jar.
+ENV SPRING_CONFIG_IMPORT="optional:file:/etc/secrets/application.yaml"
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
