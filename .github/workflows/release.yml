@@ -9,7 +9,7 @@ jobs:
   release:
     permissions:
       contents: read
-      packages: read
+      packages: write
       id-token: write
     uses: mustapha-smail-org/deployment-workflows/.github/workflows/ci-release.yml@main
     with:
