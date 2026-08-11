@@ -47,7 +47,7 @@ public class KafkaConfig {
     @Value("${app.kafka.schema-registry.auto-register-schemas:false}")
     private boolean autoRegisterSchemas;
 
-    @Value("classpath:keystore/ca.pem")
+    @Value("${app.kafka.ssl.ca-certificate-path:classpath:keystore/ca.pem}")
     private Resource caCertificate;
 
     @Bean
