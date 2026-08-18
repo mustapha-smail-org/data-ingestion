@@ -33,16 +33,17 @@ public class EventIngestionService {
 
     public void ingest() {
         ParisEventRequest request = ParisEventRequest.firstPage(PAGE_SIZE);
-
+        int count = 0, totalCount = 0;
         while (true) {
             ParisApiResponse response = client.fetchEvents(request);
 
             List<ParisEventDto> events = response.results() == null ? List.of() : response.results();
 
             for (ParisEventDto dto : events) {
-                processEvent(dto);
+                count += processEvent(dto);
             }
 
+            totalCount = Math.toIntExact(response.totalCount());
             int processedCount = request.offset() + events.size();
 
             if (events.isEmpty() || processedCount >= response.totalCount()) {
@@ -51,14 +52,15 @@ public class EventIngestionService {
 
             request = request.nextPage();
         }
+        log.info("Processed {} events out of {}", count, totalCount);
     }
 
-    private void processEvent(ParisEventDto dto) {
+    private int processEvent(ParisEventDto dto) {
         ValidationResult validation = validator.validate(dto);
 
         if (!validation.valid()) {
             log.warn("Skipping invalid event {}: {}", dto != null ? dto.id() : null, validation.errors());
-            return;
+            return 0;
         }
 
         Event event = mapper.map(dto);
@@ -66,5 +68,6 @@ public class EventIngestionService {
         log.debug("Event {} ready for publication", event.id());
 
         eventProducer.publish(event);
+        return 1;
     }
 }
