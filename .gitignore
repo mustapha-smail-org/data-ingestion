@@ -34,3 +34,7 @@ build/
 
 # Certificates
 src/main/resources/keystore/*
+
+### Properties files ###
+*-local.properties
+*-local.yaml
