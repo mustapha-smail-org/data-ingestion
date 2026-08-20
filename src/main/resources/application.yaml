@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: none
   application:
     name: data-ingestion
 log:
@@ -26,7 +28,3 @@ api:
       base-url: https://opendata.paris.fr
       dataset-id: que-faire-a-paris-
       whereClause: "(geometry(`lat_lon`, geom'POLYGON((2.3093605041503906 48.860317528761485, 2.396564483642578 48.850604133014876, 2.3615455627441406 48.83388364385727, 2.30661392211914 48.860091657242556, 2.3615455627441406 48.84360028318631, 2.3093605041503906 48.860317528761485))'))"
-ingestion:
-  schedule:
-    cron: "0 0 4 * * *"
-    zone: "Europe/Paris"
