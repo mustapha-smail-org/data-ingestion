@@ -1,4 +1,4 @@
-package com.citypulse.dataingestion.scheduler;
+package com.citypulse.dataingestion.runner;
 
 import com.citypulse.dataingestion.services.EventIngestionService;
 import org.junit.jupiter.api.Test;
@@ -12,17 +12,17 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class EventIngestionSchedulerTest {
+class EventIngestionRunnerTest {
 
     @Mock
     private EventIngestionService ingestionService;
 
     @InjectMocks
-    private EventIngestionScheduler scheduler;
+    private EventIngestionRunner runner;
 
     @Test
     void shouldStartEventIngestion() {
-        scheduler.ingestEvents();
+        runner.run(null);
 
         verify(ingestionService).ingest();
     }
@@ -36,7 +36,7 @@ class EventIngestionSchedulerTest {
                 .when(ingestionService)
                 .ingest();
 
-        assertThatThrownBy(scheduler::ingestEvents)
+        assertThatThrownBy(() -> runner.run(null))
                 .isSameAs(failure);
 
         verify(ingestionService).ingest();
