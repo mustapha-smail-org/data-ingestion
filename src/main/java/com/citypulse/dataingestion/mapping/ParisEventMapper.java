@@ -49,14 +49,26 @@ public class ParisEventMapper {
                 dto.accessLinkText()
         );
 
-        List<String> categories = dto.qfapTags() == null ? Collections.emptyList() : List.of(dto.qfapTags().split(";"));
+        List<String> categories = dto.qfapTags() == null
+                ? Collections.emptyList()
+                : List.of(dto.qfapTags().split(";")).stream()
+                .map(String::trim)
+                .filter(value -> !value.isBlank())
+                .distinct()
+                .toList();
 
         return new Event(
                 dto.id(),
                 dto.eventId(),
                 dto.title(),
                 dto.description(),
+                dto.leadText(),
+                dto.dateDescription(),
                 dto.url(),
+                dto.coverUrl(),
+                dto.coverAlt(),
+                dto.coverCredit(),
+                dto.transport(),
                 categories,
                 dto.dateStart(),
                 dto.dateEnd(),

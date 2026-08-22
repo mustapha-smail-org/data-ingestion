@@ -41,6 +41,12 @@ class EventAvroMapperTest {
         when(event.url()).thenReturn(
                 "https://example.com/events/123"
         );
+        when(event.imageUrl()).thenReturn("https://images.paris.fr/cover.jpg");
+        when(event.imageAlt()).thenReturn("People watching an outdoor movie");
+        when(event.leadText()).thenReturn("A concise introduction");
+        when(event.dateDescription()).thenReturn("Every Friday");
+        when(event.imageCredit()).thenReturn("City of Paris");
+        when(event.transport()).thenReturn("Metro 5");
         when(event.startDate()).thenReturn(start);
         when(event.endDate()).thenReturn(end);
         when(event.location()).thenReturn(location);
@@ -91,6 +97,14 @@ class EventAvroMapperTest {
                 .isEqualTo(end.toInstant());
         assertThat(result.getSourceUpdatedAt())
                 .isEqualTo(updatedAt.toInstant());
+        assertThat(result.getImageUrl())
+                .isEqualTo("https://images.paris.fr/cover.jpg");
+        assertThat(result.getImageAlt())
+                .isEqualTo("People watching an outdoor movie");
+        assertThat(result.getLeadText()).isEqualTo("A concise introduction");
+        assertThat(result.getDateDescription()).isEqualTo("Every Friday");
+        assertThat(result.getImageCredit()).isEqualTo("City of Paris");
+        assertThat(result.getTransport()).isEqualTo("Metro 5");
 
         assertThat(result.getLocation().getCity())
                 .isEqualTo("Paris");
