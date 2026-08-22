@@ -10,6 +10,7 @@ import com.citypulse.dataingestion.validation.EventValidator;
 import com.citypulse.dataingestion.validation.ValidationError;
 import com.citypulse.dataingestion.validation.ValidationResult;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +41,11 @@ class EventIngestionServiceTest {
 
     @InjectMocks
     private EventIngestionService service;
+
+    @BeforeEach
+    void completeKafkaPublications() {
+        lenient().when(producer.publish(any())).thenReturn(CompletableFuture.completedFuture(null));
+    }
 
     @Test
     void shouldFetchValidateAndMapEvents() {
@@ -125,6 +132,23 @@ class EventIngestionServiceTest {
 
         verify(client).fetchEvents(any());
         verifyNoInteractions(validator, mapper);
+    }
+
+    @Test
+    void shouldFailTheRunWhenKafkaDeliveryFails() {
+        ParisEventDto dto = mock(ParisEventDto.class);
+        Event event = mock(Event.class);
+        CompletableFuture failed = CompletableFuture.failedFuture(new RuntimeException("Kafka unavailable"));
+
+        when(client.fetchEvents(any())).thenReturn(new ParisApiResponse(1, List.of(dto)));
+        when(validator.validate(dto)).thenReturn(ValidationResult.validResult());
+        when(mapper.map(dto)).thenReturn(event);
+        when(producer.publish(event)).thenReturn(failed);
+
+        org.assertj.core.api.Assertions.assertThatThrownBy(service::ingest)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Kafka delivery failed during event ingestion")
+                .hasRootCauseMessage("Kafka unavailable");
     }
 
     private List<ParisEventDto> createEvents(int count) {

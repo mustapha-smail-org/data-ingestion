@@ -12,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 @Slf4j
 @Service
@@ -38,10 +42,14 @@ public class EventIngestionService {
             ParisApiResponse response = client.fetchEvents(request);
 
             List<ParisEventDto> events = response.results() == null ? List.of() : response.results();
+            List<CompletableFuture<?>> publications = new ArrayList<>(events.size());
 
             for (ParisEventDto dto : events) {
-                count += processEvent(dto);
+                Optional<CompletableFuture<?>> publication = processEvent(dto);
+                publication.ifPresent(publications::add);
+                count += publication.isPresent() ? 1 : 0;
             }
+            awaitPublications(publications);
 
             totalCount = Math.toIntExact(response.totalCount());
             int processedCount = request.offset() + events.size();
@@ -55,19 +63,26 @@ public class EventIngestionService {
         log.info("Processed {} events out of {}", count, totalCount);
     }
 
-    private int processEvent(ParisEventDto dto) {
+    private Optional<CompletableFuture<?>> processEvent(ParisEventDto dto) {
         ValidationResult validation = validator.validate(dto);
 
         if (!validation.valid()) {
             log.warn("Skipping invalid event {}: {}", dto != null ? dto.id() : null, validation.errors());
-            return 0;
+            return Optional.empty();
         }
 
         Event event = mapper.map(dto);
 
         log.debug("Event {} ready for publication", event.id());
 
-        eventProducer.publish(event);
-        return 1;
+        return Optional.of(eventProducer.publish(event));
+    }
+
+    private void awaitPublications(List<CompletableFuture<?>> publications) {
+        try {
+            CompletableFuture.allOf(publications.toArray(CompletableFuture[]::new)).join();
+        } catch (CompletionException exception) {
+            throw new IllegalStateException("Kafka delivery failed during event ingestion", exception.getCause());
+        }
     }
 }

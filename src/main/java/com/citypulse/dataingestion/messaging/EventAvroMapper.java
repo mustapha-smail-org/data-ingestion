@@ -23,7 +23,13 @@ public class EventAvroMapper {
                 .setSourceEventId(event.sourceEventId())
                 .setTitle(event.title())
                 .setDescription(event.description())
+                .setLeadText(event.leadText())
+                .setDateDescription(event.dateDescription())
                 .setUrl(event.url())
+                .setImageUrl(event.imageUrl())
+                .setImageAlt(event.imageAlt())
+                .setImageCredit(event.imageCredit())
+                .setTransport(event.transport())
                 .setStartDate(toRequiredInstant(
                         event.startDate(),
                         "startDate"
