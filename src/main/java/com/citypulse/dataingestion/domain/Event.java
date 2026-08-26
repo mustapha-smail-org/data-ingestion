@@ -22,6 +22,7 @@ public record Event(
         List<EventOccurrence> occurrences,
         EventAccessibility accessibility,
         EventPricing pricing,
-        OffsetDateTime sourceUpdatedAt
+        OffsetDateTime sourceUpdatedAt,
+        EventEnvironment environment
 ) {
 }

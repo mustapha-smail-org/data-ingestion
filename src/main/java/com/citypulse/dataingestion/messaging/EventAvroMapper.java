@@ -43,6 +43,7 @@ public class EventAvroMapper {
                 .setPricing(mapPricing(event.pricing()))
                 .setCategories(defaultList(event.categories()))
                 .setSourceUpdatedAt(toInstant(event.sourceUpdatedAt()))
+                .setEnvironment(environmentName(event.environment()))
                 .build();
     }
 
@@ -140,5 +141,10 @@ public class EventAvroMapper {
 
     private <T> List<T> defaultList(List<T> values) {
         return values == null ? List.of() : values;
+    }
+
+    private String environmentName(EventEnvironment environment) {
+        return (environment == null ? EventEnvironment.UNKNOWN : environment)
+                .name();
     }
 }

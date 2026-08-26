@@ -57,6 +57,8 @@ class EventAvroMapperTest {
                 List.of("Cinema", "Outdoor")
         );
         when(event.sourceUpdatedAt()).thenReturn(updatedAt);
+        when(event.environment())
+                .thenReturn(EventEnvironment.OUTDOOR);
 
         when(location.name()).thenReturn("Parc de Paris");
         when(location.street()).thenReturn("1 rue de Paris");
@@ -127,6 +129,9 @@ class EventAvroMapperTest {
 
         assertThat(result.getCategories())
                 .containsExactly("Cinema", "Outdoor");
+
+        assertThat(result.getEnvironment().toString())
+                .isEqualTo("OUTDOOR");
     }
 
     @Test
@@ -150,6 +155,8 @@ class EventAvroMapperTest {
         assertThat(result.getCategories()).isEmpty();
         assertThat(result.getEndDate()).isNull();
         assertThat(result.getSourceUpdatedAt()).isNull();
+        assertThat(result.getEnvironment().toString())
+                .isEqualTo("UNKNOWN");
     }
 
     @Test
