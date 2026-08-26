@@ -2,6 +2,7 @@ package com.citypulse.dataingestion.mapping;
 
 import com.citypulse.dataingestion.domain.Event;
 import com.citypulse.dataingestion.domain.EventAccessibility;
+import com.citypulse.dataingestion.domain.EventEnvironment;
 import com.citypulse.dataingestion.domain.EventLocation;
 import com.citypulse.dataingestion.domain.EventPricing;
 import com.citypulse.dataingestion.dto.ParisEventDto;
@@ -76,7 +77,8 @@ public class ParisEventMapper {
                 occurrenceParser.parse(dto.occurrences()),
                 accessibility,
                 pricing,
-                dto.updatedAt()
+                dto.updatedAt(),
+                EventEnvironment.fromIndoorFlag(dto.eventIndoor())
         );
     }
 

@@ -1,6 +1,7 @@
 package com.citypulse.dataingestion.mapping;
 
 import com.citypulse.dataingestion.domain.Event;
+import com.citypulse.dataingestion.domain.EventEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static com.citypulse.dataingestion.utils.ParisEventDtoFixture.validEvent;
@@ -34,5 +35,8 @@ class ParisEventMapperTest {
 
         assertThat(event.pricing().priceType()).isEqualTo("gratuit");
         assertThat(event.occurrences()).hasSize(1);
+
+        // Fixture carries event_indoor = 0 -> OUTDOOR.
+        assertThat(event.environment()).isEqualTo(EventEnvironment.OUTDOOR);
     }
 }
